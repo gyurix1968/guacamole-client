@@ -1,0 +1,34 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+node_selector:
+  physical-node: dev1
+
+trigger:
+  event:
+    - push
+
+workspace:
+  path: /drone/src
+
+steps:
+  - name: pull image to dockerhub
+    image: docker.io/owncloudci/drone-docker-buildx:4
+    privileged: true
+    settings:
+      cache-from: [ "safebox/guacamole-tomcat" ]
+      repo: safebox/guacamole-tomcat
+      dockerfile: Dockerfile.alpine
+      tags: latest
+      username:
+        from_secret: dockerhub-username
+      password: 
+        from_secret: dockerhub-password
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    when:  
+      event:
+        - push
+
