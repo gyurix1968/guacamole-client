@@ -27,6 +27,10 @@ steps:
       platforms:
         - linux/amd64
         - linux/arm64
+      build_args:
+        - "--pull"
+        - "--no-cache"
+        - "--force-rm"
     when:  
       event:
         - push
